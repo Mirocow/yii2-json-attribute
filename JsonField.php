@@ -1,6 +1,7 @@
 <?php
 namespace mirocow\jsonattribute;
 
+use Yii;
 use yii\base\Arrayable;
 use yii\base\InvalidParamException;
 use yii\helpers\Json;
@@ -26,7 +27,7 @@ class JsonField implements \ArrayAccess, \Iterator, \Countable, Arrayable
      */
     public function __toString()
     {
-        return $this->value ? Json::encode($this->value) : '';
+        return $this->value ? Json::encode($this->value) : '[]';
     }
 
     /**
@@ -39,11 +40,11 @@ class JsonField implements \ArrayAccess, \Iterator, \Countable, Arrayable
         } elseif (is_string($value)) {
             $value = Json::decode($value, true);
             if (!is_array($value)) {
-                throw new InvalidParamException('Value is scalar');
+                throw new InvalidParamException(Yii::t('app', 'Value is scalar'));
             }
         }
         if (!is_array($value)) {
-            throw new InvalidParamException('Value is not array');
+            throw new InvalidParamException(Yii::t('app', 'Value is not array'));
         } else {
             $this->value = $value;
         }

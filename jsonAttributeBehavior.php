@@ -1,6 +1,7 @@
 <?php
 namespace mirocow\jsonattribute;
 
+use Yii;
 use yii\base\Behavior;
 use yii\base\InvalidArgumentException;
 use yii\db\ActiveRecord;
@@ -18,7 +19,7 @@ class jsonAttributeBehavior extends Behavior
     /**
      * @var null|string
      */
-    public $defaultValue;
+    public $defaultValue = null;
 
     /**
      * @var bool
@@ -88,6 +89,10 @@ class jsonAttributeBehavior extends Behavior
     {
         foreach ($this->attributes as $attribute) {
             $value = $this->owner->getAttribute($attribute);
+            if(empty($value)) {
+                $this->owner->addError($attribute, Yii::t('app', 'Value hasn`t Json format'));
+                continue;
+            }
             if (!$value instanceof JsonField) {
                 try {
                     $value = new JsonField($value);
