@@ -131,7 +131,6 @@ class JsonField implements \ArrayAccess, \Iterator, \Countable, Arrayable
         return current($this->value);
     }
 
-
     /**
      * @inheritdoc
      */
