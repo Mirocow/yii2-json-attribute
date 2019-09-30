@@ -78,7 +78,7 @@ class jsonAttributeBehavior extends Behavior
     protected function initialization()
     {
         foreach ($this->attributes as $attribute) {
-            $this->owner->setAttribute($attribute, new JsonField());
+            $this->owner->setAttribute($attribute, new JsonField(null, $this->defaultValue));
         }
     }
 
@@ -89,16 +89,14 @@ class jsonAttributeBehavior extends Behavior
     {
         foreach ($this->attributes as $attribute) {
             $value = $this->owner->getAttribute($attribute);
-            if(empty($value)) {
-                $this->owner->addError($attribute, Yii::t('app', 'Value hasn`t Json format'));
-                continue;
-            }
-            if (!$value instanceof JsonField) {
-                try {
-                    $value = new JsonField($value);
-                } catch (InvalidArgumentException $e){
-                    $this->owner->addError($attribute, $e->getMessage());
-                    continue;
+            if(!empty($value)) {
+                if (!$value instanceof JsonField) {
+                    try {
+                        $value = new JsonField($value, $this->defaultValue);
+                    } catch (InvalidArgumentException $e) {
+                        $this->owner->addError($attribute, $e->getMessage());
+                        continue;
+                    }
                 }
             }
             $this->owner->setAttribute($attribute, $value);
@@ -113,7 +111,7 @@ class jsonAttributeBehavior extends Behavior
         foreach ($this->attributes as $attribute) {
             $field = $this->owner->getAttribute($attribute);
             if (!$field instanceof JsonField) {
-                $field = new JsonField($field);
+                $field = new JsonField($field, $this->defaultValue);
             }
             $this->owner->setAttribute($attribute, (string)$field ?: $this->defaultValue);
         }

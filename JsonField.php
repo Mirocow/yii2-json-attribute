@@ -13,13 +13,13 @@ class JsonField implements \ArrayAccess, \Iterator, \Countable, Arrayable
      */
     protected $value;
 
-
     /**
      * @param string|array $value
+     * @param array|null $defaultValue
      */
-    public function __construct($value = [])
+    public function __construct($value = [], $defaultValue = [])
     {
-        $this->set($value);
+        $this->set($value, $defaultValue);
     }
 
     /**
@@ -32,11 +32,12 @@ class JsonField implements \ArrayAccess, \Iterator, \Countable, Arrayable
 
     /**
      * @param string|array $value
+     * @param array|null $defaultValue
      */
-    public function set($value)
+    public function set($value, $defaultValue = [])
     {
         if ($value === null || $value === '') {
-            $value = [];
+            $value = $defaultValue;
         } elseif (is_string($value)) {
             $value = Json::decode($value, true);
             if (!is_array($value)) {
