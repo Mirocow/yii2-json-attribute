@@ -46,7 +46,7 @@ class JsonField implements \ArrayAccess, \Iterator, \Countable, Arrayable
         }
 
         if (!is_array($value)) {
-            throw new InvalidParamException(Yii::t('app', 'Value is scalar'));
+            throw new InvalidParamException(Yii::t('app', 'Value is not array'));
         }
 
         $this->value = $value;
