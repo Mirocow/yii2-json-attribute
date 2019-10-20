@@ -11,7 +11,7 @@ class JsonField implements \ArrayAccess, \Iterator, \Countable, Arrayable
     /**
      * @var array
      */
-    protected $value;
+    protected $value = [];
 
     /**
      * @param string|array $value
@@ -37,18 +37,19 @@ class JsonField implements \ArrayAccess, \Iterator, \Countable, Arrayable
     public function set($value, $defaultValue = [])
     {
         if ($value === null || $value === '') {
-            $value = $defaultValue;
+            $value = !empty($defaultValue)? $defaultValue: [];
         } elseif (is_string($value)) {
             $value = Json::decode($value, true);
             if (!is_array($value)) {
                 throw new InvalidParamException(Yii::t('app', 'Value is scalar'));
             }
         }
+
         if (!is_array($value)) {
-            throw new InvalidParamException(Yii::t('app', 'Value is not array'));
-        } else {
-            $this->value = $value;
+            throw new InvalidParamException(Yii::t('app', 'Value is scalar'));
         }
+
+        $this->value = $value;
     }
 
     /**
@@ -73,7 +74,7 @@ class JsonField implements \ArrayAccess, \Iterator, \Countable, Arrayable
      */
     public function toArray(array $fields = [], array $expand = [], $recursive = true)
     {
-        return empty($fields) ? $this->value : array_intersect_key($this->value, array_flip($fields));
+        return empty($fields)? $this->value : array_intersect_key($this->value, array_flip($fields));
     }
 
     /**
@@ -95,13 +96,12 @@ class JsonField implements \ArrayAccess, \Iterator, \Countable, Arrayable
     /**
      * @inheritdoc
      */
-    public function &offsetGet($offset)
+    public function offsetGet($offset)
     {
-        $null = null;
         if (isset($this->value[$offset])) {
             return $this->value[$offset];
         } else {
-            return $null;
+            return null;
         }
     }
 
