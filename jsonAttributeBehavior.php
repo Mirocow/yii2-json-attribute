@@ -78,7 +78,7 @@ class jsonAttributeBehavior extends Behavior
     protected function initialization()
     {
         foreach ($this->attributes as $attribute) {
-            $this->owner->setAttribute($attribute, new JsonField($this->owner->getAttributes($attribute), $this->defaultValue));
+            $this->owner->setAttribute($attribute, new JsonField($this->owner->getAttribute($attribute), $this->defaultValue));
         }
     }
 
